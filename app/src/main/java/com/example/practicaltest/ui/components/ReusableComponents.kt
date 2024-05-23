@@ -15,6 +15,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -75,16 +76,18 @@ fun CustomInputField(
             .wrapContentHeight()
     ) {
 
-        Text(
-            text = inputTitle,
-            modifier = Modifier
-                .wrapContentSize(),
-            style = TextStyle(
-                //color = Color(0xFF68AB00),
-                fontSize = 15.sp,
-                textAlign = TextAlign.Right,
-            )
-        )
+//        Text(
+//            text = inputTitle,
+//            modifier = Modifier
+//                .wrapContentSize(),
+//            style = TextStyle(
+//                //color = Color(0xFF68AB00),
+//                fontSize = 15.sp,
+//                textAlign = TextAlign.Right,
+//            )
+//        )
+        Text(text = inputTitle)
+
         TextField(
             // value = if(inputValue.isNullOrEmpty()) "---" else inputValue ,
             value = inputValue,
@@ -102,6 +105,10 @@ fun CustomInputField(
             supportingText = {
                 if (errorMessage != null) {
                     InputFieldErrorText(errorMessage = errorMessage)
+                }else{
+                    TextButton(onClick = { /* Handle forgot username */ }) {
+                        Text(text = "Forgot Username?", )
+                    }
                 }
             },
             label = {
@@ -138,30 +145,32 @@ fun CustomInputField(
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginInputField(
     label: String,
-    inputValue:String,
-    onChangeValue:(String) -> Unit,
-    errorMessage:String? = null,
-) {
-    val colors = TextFieldDefaults.textFieldColors(
-        containerColor = Color.Transparent,
-        focusedIndicatorColor = Color.White,
-        unfocusedIndicatorColor = Color.White,
-        focusedPlaceholderColor = Color.White,
-        unfocusedPlaceholderColor = Color.White,
-        errorLabelColor = Color.Red,
-        errorLeadingIconColor = Color.Red,
+    inputValue: String,
+    onChangeValue: (String) -> Unit,
+    errorMessage: String? = null,
+    indicator: Boolean = true,
+
+    ) {
+    val colors = TextFieldDefaults.colors(
         errorTextColor = Color.Red,
-        errorTrailingIconColor = Color.Red,
-        focusedTrailingIconColor = Color.White,
+        focusedContainerColor = Color.Transparent,
+        unfocusedContainerColor = Color.Transparent,
+        disabledContainerColor = Color.Transparent,
         errorContainerColor = Color.Transparent,
+        errorCursorColor = Color.Red,
+        focusedIndicatorColor = if (indicator) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.scrim,
+        unfocusedIndicatorColor = if (indicator) MaterialTheme.colorScheme.inversePrimary else MaterialTheme.colorScheme.scrim,
         errorIndicatorColor = Color.Red,
+        errorLeadingIconColor = Color.Red,
+        errorTrailingIconColor = Color.Red,
+        errorLabelColor = Color.Red,
         errorPlaceholderColor = Color.Red,
-        focusedTextColor = Color.White
+        disabledIndicatorColor = Color.Transparent
+
     )
     TextField(
         colors = colors,
@@ -169,16 +178,19 @@ fun LoginInputField(
         textStyle = TextStyle(
             fontSize = 17.sp,
             textAlign = TextAlign.Left,
+            color = MaterialTheme.colorScheme.secondary,
+
             //fontFamily = FontFamily(Font(R.font.nunitosans_7pt_regular)),
 
+
             ),
-        isError =errorMessage != null,
+        isError = errorMessage != null,
         label = {
             if (inputValue.isEmpty() || errorMessage == null) {
                 Text(
                     text = label,
                     style = TextStyle(
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.secondary,
                         fontSize = 15.sp,
                         //fontFamily = FontFamily(Font(R.font.nunitosans_7pt_regular)),
 
@@ -186,6 +198,7 @@ fun LoginInputField(
                     modifier = Modifier
                         .padding(start = 0.dp)
                         .offset(y = (-10).dp)
+                        .offset(x = (-20).dp)
                 )
             } else {
                 Text(
@@ -193,20 +206,26 @@ fun LoginInputField(
                     style = TextStyle(
                         color = Color.Red,
                         fontSize = 15.sp,
-                       // fontFamily = FontFamily(Font(R.font.nunitosans_7pt_regular)),
+                        //fontFamily = FontFamily(Font(R.font.nunitosans_7pt_regular)),
 
                         ),
                     modifier = Modifier
                         .padding(start = 0.dp)
                         .offset(y = (-10).dp)
+                        .offset(x = (-20).dp)
+
                 )
             }
         },
         onValueChange = onChangeValue,
         modifier = Modifier
-            .fillMaxWidth()
             .background(Color.Transparent)
-            .padding(top = 10.dp, bottom = 10.dp)
+            .padding(
+                top = 0.dp, // 0dp to remove, adjust as needed
+                bottom = 0.dp,
+                start = 0.dp,
+                end = 0.dp
+            )
         ,
         keyboardOptions = KeyboardOptions(
             capitalization = KeyboardCapitalization.None,
@@ -214,7 +233,6 @@ fun LoginInputField(
             keyboardType = KeyboardType.Text,
             imeAction = ImeAction.Next
         ),
-        leadingIcon = {},
         shape = RectangleShape,
         maxLines = 1,
         singleLine = true

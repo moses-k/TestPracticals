@@ -1,4 +1,4 @@
-package com.example.practicaltest.core.api
+package com.example.practicaltest.dataclass
 
 import kotlinx.serialization.Serializable
 

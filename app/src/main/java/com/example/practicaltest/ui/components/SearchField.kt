@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -17,11 +18,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.practicaltest.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,18 +47,22 @@ fun SearchField(
             onValueChange(it)
         },
         leadingIcon = {
-            Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.Black)
+            Icon(Icons.Default.Search, contentDescription = "Search", tint = colorScheme.secondary,)
         },
         trailingIcon = {
-            Icon(Icons.Default.List, contentDescription = "Search", tint = Color.Black)
+            Icon(Icons.Default.List, contentDescription = "Search", tint = colorScheme.secondary,)
+//            Icon(
+//                painter = painterResource(id = R.drawable.filter), // Replace with your icon resource
+//                contentDescription = "logout"
+//            )
         },
         label = { Text(text = "Search products") },
         colors = OutlinedTextFieldDefaults.colors(
-            cursorColor = Color.Black,
-            focusedBorderColor = Color.Black,
-            unfocusedBorderColor = Color.Black,
-            focusedLabelColor = Color.Black,
-            unfocusedLabelColor = Color.Black,
+            cursorColor = colorScheme.secondary,
+            focusedBorderColor = colorScheme.secondary,
+            unfocusedBorderColor = colorScheme.secondary,
+            focusedLabelColor = colorScheme.secondary,
+            unfocusedLabelColor = colorScheme.secondary,
         ),
         textStyle = TextStyle(
             fontSize = 18.sp,

@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    //implementation(libs.androidx.material3.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -71,6 +72,15 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.ktorSerializer)
+    implementation(libs.ktorClientCore)
+    implementation(libs.ktorClientAndroid)
+    implementation(libs.ktorClientAuth)
+    implementation(libs.ktorNegotiation)
+    implementation(libs.ktorLogging)
+    implementation(libs.ktorOkhttp)
+    implementation(libs.ktorNetwork)
+    implementation(libs.ktorNetworkTls)
 
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -97,14 +107,18 @@ dependencies {
     implementation("com.jakewharton.timber:timber:5.0.1")
 
     // dagger hilt
-    implementation ("com.google.dagger:hilt-android:2.51")
-    ksp ("com.google.dagger:hilt-compiler:2.51")
+    implementation ("com.google.dagger:hilt-android:2.51.1")
+    ksp ("com.google.dagger:hilt-compiler:2.51.1")
 
     implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation ("androidx.navigation:navigation-compose:2.7.7")
 
     ksp("androidx.hilt:hilt-compiler:1.2.0")
     implementation("androidx.hilt:hilt-common:1.2.0")
+
+    implementation("io.coil-kt:coil:2.6.0")
+    implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation("com.google.code.gson:gson:2.7")
 
 
 }

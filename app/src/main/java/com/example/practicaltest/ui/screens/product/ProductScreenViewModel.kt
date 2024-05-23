@@ -1,49 +1,68 @@
 package com.example.practicaltest.ui.screens.product
 
-import androidx.lifecycle.SavedStateHandle
+import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.practicaltest.core.api.Post
-import com.example.practicaltest.core.util.NetworkResult
-import com.example.practicaltest.data.PostRepository
+import com.example.practicaltest.HttpClient.NetworkResult
+import com.example.practicaltest.dataclass.Post
+import com.example.practicaltest.repository.ProductServices
+import com.example.practicaltest.ui.screens.products.AllProductsScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
-data class ProductScreenState(
-    val product:Post? = null,
-)
 
+data class ProductScreenState(
+    val product: Post? = null,
+)
 
 @HiltViewModel
 class ProductScreenViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
-    private val postRepository: PostRepository
-):ViewModel() {
-
-    val id = savedStateHandle.get<String>(key = "id") ?: ""
+    private val productServices: ProductServices
+) : ViewModel() {
 
     private var _uiState = MutableStateFlow(ProductScreenState())
     val uiState = _uiState.asStateFlow()
 
+    @SuppressLint("BinaryOperationInTimber")
+    fun getProductById(id: String) {
+        Timber.tag("---Fetch Profile Details  ---").w("---Fetch Profile Details ---")
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                productServices.getProductById(id).flowOn(Dispatchers.IO)
+                    .catch { error ->
+                        Timber.tag("getAllProducts error Response").w(error)
+                    }
+                    .collect { result ->
+                        when (result) {
+                            is NetworkResult.Success -> {
+                                _uiState.update { it.copy(product = result.data) }
+                            }
 
-    fun getProductById(){
-        viewModelScope.launch {
-            val response = postRepository.getPostById(postId = id)
-            when(response){
-                is NetworkResult.Success -> {
-                    _uiState.update { it.copy(product = response.data) }
-                }
-                is NetworkResult.Error -> {
+                            is NetworkResult.Error -> {
 
-                }
-                is NetworkResult.Exception -> {
+                            }
+                            is NetworkResult.Unauthorized -> {
 
-                }
+                            }
+                        }
+                    }
+
+            }catch (_:Exception){
+                Timber.tag("exception in getAllProducts ").w("exception in getAllProducts")
+
+            }finally {
+
             }
+
         }
     }
+
 }

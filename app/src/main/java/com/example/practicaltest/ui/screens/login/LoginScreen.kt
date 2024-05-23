@@ -4,10 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -15,30 +13,24 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.practicaltest.R
-import com.example.practicaltest.core.util.Screens
-import com.example.practicaltest.ui.components.CustomInputField
+import com.example.practicaltest.util.Screens
 import com.example.practicaltest.ui.components.GreenButton
 import com.example.practicaltest.ui.components.LoginInputField
 
@@ -47,14 +39,11 @@ fun LoginScreen(
     navController: NavController,
     viewModel: LoginScreenViewModel = hiltViewModel()
 ) {
-
-
     LoginScreenContent(
         navigateToAllProductsScreen = {
-            navController.navigate(Screens.ALL_PRODUCTS_SCREEN)
+            navController.navigate("all-products")
         }
     )
-
 
 }
 
@@ -140,7 +129,6 @@ fun LoginScreenContent(
                 }
             }
 
-
         }
         Column(
             modifier = Modifier
@@ -174,15 +162,16 @@ fun LoginScreenContent(
                 Text(
                     text = "Use your credentials to log in",
                     style = TextStyle(
-                        color = Color(0xFF4F4F50),
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium
+                        color = colorScheme.secondary,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Normal
                     )
                 )
             }
+
             Column(
                 modifier = Modifier
-                    .fillMaxWidth(.9f)
+                    .fillMaxWidth(.8f)
                     .padding(
                         start = 0.dp,
                         top = 0.dp,
@@ -191,52 +180,48 @@ fun LoginScreenContent(
                     )
                 ) {
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
-
-                CustomInputField(
-                    inputTitle = "UserName",
+                LoginInputField(
+                    label = "Username",
                     inputValue = userName.value,
-                    labelColor = Color.White,
-                    textColor = Color(0xFF68AB00),
-                    keyboardType = KeyboardType.Text,
-                    setValue = {
-                        userName.value  =it
-                    },
-                    readOnly = false
-                )
-                Text(
-                    text = "Forgot Username",
-                    modifier = Modifier
-                        .wrapContentSize(),
-                    style = TextStyle(
-                        color = Color(0xFF68AB00),
-                        fontSize = 15.sp,
-                        textAlign = TextAlign.Right,
-                    )
+                    onChangeValue = {userName.value = it}
                 )
 
-                CustomInputField(
-                    inputTitle = "Password",
+                Row(
+                    modifier = Modifier.fillMaxWidth().background(Color.Transparent)
+                        .padding(
+                            top = 0.dp, // 0dp to remove, adjust as needed
+                            bottom = 0.dp,
+                            start = 0.dp,
+                            end = 0.dp
+                        ),
+                    horizontalArrangement = Arrangement.End
+
+                ) {
+                    TextButton(onClick = { /* Handle forgot username */ }) {
+                        Text(text = "Forgot Username?",style = TextStyle(
+                            color = Color(0xFF68AB00),) )
+                    }
+
+                }
+
+                LoginInputField(
+                    label = "Password",
                     inputValue = password.value,
-                    labelColor = Color.White,
-                    textColor = MaterialTheme.colorScheme.primary,
-                    keyboardType = KeyboardType.Text,
-                    setValue = {
-                        password.value = it
-                    },
-                    readOnly = false
+                    onChangeValue = {password.value = it}
                 )
-                Text(
-                    text = "Forgot Password",
-                    modifier = Modifier
-                        .wrapContentSize(),
-                    style = TextStyle(
-                        color = Color(0xFF68AB00),
-                        fontSize = 15.sp,
-                        textAlign = TextAlign.Right,
-                    )
-                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = { /* Handle forgot username */ }) {
+                        Text(text = "Forgot Password?", style = TextStyle(
+                            color = Color(0xFF68AB00)))
+                    }
+
+                }
 
                 GreenButton(
                     text = "Login",

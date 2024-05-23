@@ -1,4 +1,4 @@
-package com.example.practicaltest.core.util
+package com.example.practicaltest.util
 
 object Screens {
 

@@ -1,69 +1,57 @@
-package com.example.practicaltest.core.di
+package com.coopbank.mcoopcash.HiltUtils
 
 import android.content.Context
-import com.example.practicaltest.core.api.ApiService
-import com.example.practicaltest.core.util.Constants
-import com.example.practicaltest.data.PostRepository
-import com.example.practicaltest.data.PostRepositoryImpl
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.example.practicaltest.HttpClient.ProductServiceImpl
+import com.example.practicaltest.repository.ProductServices
+import com.example.practicaltest.util.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.runBlocking
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.android.Android
+import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.header
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+
+//@dagger.Module
+
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
-
     @Provides
     @Singleton
-    fun providesNetworkJson(): Json = Json {
-        ignoreUnknownKeys = true
-        coerceInputValues = true
-        explicitNulls = true
-    }
+    fun provideProductService(
+        httpClient: HttpClient,
+    ): ProductServices = ProductServiceImpl(httpClient)
 
-    @Provides
     @Singleton
+    @Provides
     fun provideHttpClient(
-        @ApplicationContext context: Context,
-    ): OkHttpClient {
-        return OkHttpClient.Builder()
-            .connectTimeout(1, TimeUnit.MINUTES)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(60, TimeUnit.SECONDS)
-            .build()
-    }
-
-    @Provides
-    @Singleton
-    fun providePostRepository(apiService: ApiService):PostRepository{
-        return PostRepositoryImpl(api = apiService)
-    }
-
-
-    @Provides
-    @Singleton
-    fun provideApiService(
-        client: OkHttpClient,
-        networkJson: Json,
-    ): ApiService {
-        return Retrofit.Builder()
-            .baseUrl(Constants.BASE_URL)
-            .client(client)
-            .addConverterFactory(
-                networkJson.asConverterFactory("application/json".toMediaType()),
-            )
-            .build()
-            .create(ApiService::class.java)
+    ): HttpClient {
+        val baseUrl = BASE_URL
+        return HttpClient(Android) {
+            install(Logging) {
+                level = LogLevel.ALL
+            }
+            install(DefaultRequest) {
+                url(baseUrl)
+                header(HttpHeaders.ContentType, ContentType.Application.Json)
+            }
+            install(ContentNegotiation) {
+                json(Json)
+            }
+        }
     }
 }
+
